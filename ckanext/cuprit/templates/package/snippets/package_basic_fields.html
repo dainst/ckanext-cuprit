@@ -1,16 +1,21 @@
 {% ckan_extends %}
 
 {% block package_metadata_fields_visibility %}
-{% if not h.is_editor(c.user, data.owner_org or data.group) and data.id %}
-{{ super() }}
-{% endif %}
-{% endblock %}
+  {% if h.is_organization_admin(c.userobj.id, data.owner_org) %}
 
+    <!-- Visibility can only be changed from ogranisation admins -->
 
-{% block package_basic_fields_org %}
-{% if c.userobj.sysadmin %}
-{{ super() }}
-{% endif %}
+    <div class="form-group control-medium">
+      <label for="field-private" class="form-label">{{ _('Visibility') }}</label>
+      <div class="controls">
+        <select id="field-private" name="private" class="form-control">
+          {% for option in [('True', _('Private')), ('False', _('Public'))] %}
+          <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
 
 
@@ -27,8 +32,7 @@
   {{ form.input('version', label=_('Version'), id='field-version', placeholder=_('1.0'), value=data.version,
   error=errors.version, classes=['control-medium']) }}
 
-  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the
-  data'), value=data.notes, error=errors.notes) }}
+  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
 
   <div class="form-group">
     {% set error = errors.type_of_publication %}
@@ -145,24 +149,6 @@
     initializeSelect2();
   </script>
 
-
-  {% if not c.userobj.sysadmin %}
-  <div class="form-group control-medium">
-    <label for="field-organizations" class="form-label">{{ _('Organization') }}</label><br>
-    <select id="field-organizations" name="owner_org" readonly="readonly">
-      {% set organizations_available = h.organizations_available('create_dataset') %}
-      {% for organization in organizations_available %}
-      {# get out first org from users list only if there is not an existing org #}
-      {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and
-      organization.id == organizations_available[0].id) %}
-      <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{
-        organization.display_name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  {% endif %}
-
-
   <!-- hide original tags -->
   {% block package_basic_fields_tags %}
   {% endblock %}
@@ -234,12 +220,15 @@
   without URL f.e.: 000230542'), value=data.bibliography_id, error=errors.bibliography_id, classes=['control-medium'])
   }}
 
-  {% if c.userobj.sysadmin %}
-  {{ form.input('doi', label=_('DOI'), id='field-doi', placeholder=_('The dataset DOI (datacite.org) if present'),
-  value=data.doi, error=errors.doi, classes=['control-medium']) }}
-  {% endif %}
+  {% if h.is_organization_admin(c.userobj.id, data.owner_org) %}
 
-  {% block package_basic_fields_description %}
-  {% endblock %}
+    <!-- DOI can only be changed from ogranisation admins -->
+
+    {{ form.input('doi', label=_('DOI'), id='field-doi', placeholder=_('The dataset DOI (datacite.org) if present'),
+    value=data.doi, error=errors.doi, classes=['control-medium']) }}
+    {% endif %}
+
+    {% block package_basic_fields_description %}
+    {% endblock %}
 
   {% endblock %}

@@ -1,6 +1,32 @@
 import ckanext.cuprit.logic.auth_utils as auth_utils
 import ckan.plugins.toolkit as tk
 import re
+from ckan import logic
+
+
+def is_organization_admin(user_id, organization_id):
+    """
+    Checks if the specified user is an admin of the specified organization.
+
+    Args:
+        user_id (str): The user ID to check.
+        organization_id (str): The organization ID to check against.
+
+    Returns:
+        bool: True if the user is an admin of the organization, False otherwise.
+    """
+    context = {'user': user_id}
+    try:
+        # Attempt to check if the user can update the organization
+        logic.check_access('organization_update', context, {'id': organization_id})
+        return True
+    except logic.NotAuthorized:
+        return False
+    except Exception as e:
+        # Log or handle the exception as needed
+        print('Error checking organization admin status: {}'.format(str(e)))
+        return False
+
 
 
 def is_editor(user: str, office: str =None) -> bool:
