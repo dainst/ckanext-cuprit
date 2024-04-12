@@ -15,7 +15,7 @@
     <div v-for="(item, index) in authors" :key="index" class="author-block">
       <!-- Author Name Label -->
       <label for="author-name-{{index}}" class="form-label mb-0 mt-2 fw-normal">Author Name</label>
-      <input type="text" v-model="item.name" id="author-name-{{index}}" class="form-control control-medium" placeholder="Firstname Lastname">
+      <input type="text" @keyup="updateHiddenInputs" v-model="item.name" id="author-name-{{index}}" class="form-control control-medium" placeholder="Firstname Lastname">
   
       <!-- ORCID Label -->
       <label for="author-orcid-{{index}}" class="form-label mb-0 mt-2 fw-normal">ORCID</label>
@@ -54,6 +54,7 @@
       },
       removeAuthor(index) {
         this.authors.splice(index, 1);
+        this.updateHiddenInputs();
       },
       validateAndUpdateAuthor(index, field, value) {
         // Validation logic here
@@ -102,7 +103,7 @@
       <div class="row">
       <div class="col-md-8">
         <label for="name-{{index}}" class="form-label mb-0 mt-2 fw-normal">Name</label>
-        <input type="text" v-model="item.name" id="name-{{index}}" class="form-control control-medium" placeholder="Firstname Lastname">
+        <input type="text" @keyup="updateHiddenInputs" v-model="item.name" id="name-{{index}}" class="form-control control-medium" placeholder="Firstname Lastname">
       </div>
     
       <!-- Type Select Field -->
@@ -177,6 +178,7 @@
         },
         removeContributor(index) {
           this.contributors.splice(index, 1);
+          this.updateHiddenInputs();
         },
         validateAndUpdateContributor(index, field, value) {
           if (value === '') {
