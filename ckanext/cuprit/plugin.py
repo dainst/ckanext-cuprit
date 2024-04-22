@@ -217,3 +217,4 @@ class CupritPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm, DefaultT
         xml_dict = build_xml_dict_doi(metadata_dict, xml_dict)
         return xml_dict
 
+
