@@ -54,7 +54,7 @@ def format_orcid(authors: str) -> str:
     authors = authors.split(";")
     author_html_str = ""
     for author in authors:
-        author_orcid = re.search('(\d{4}-\d{4}-\d{4}-\d{4})', author)
+        author_orcid = re.search('(\d{4}-\d{4}-\d{4}-\d{3}[\dX])', author)
         author_rorid = re.search('\[(.*?)\]', author)
         author_type = re.search('\{(.*?)\}', author)  # Search for text within curly braces
         

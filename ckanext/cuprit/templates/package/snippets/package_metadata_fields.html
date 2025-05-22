@@ -79,7 +79,7 @@
         }).join('; ');
       },
       validateOrcid(orcid) {
-        const regex = /^\d{4}-\d{4}-\d{4}-\d{4}$/;
+        const regex = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/;
         return regex.test(orcid);
       },
       validateRorid(rorid) {
