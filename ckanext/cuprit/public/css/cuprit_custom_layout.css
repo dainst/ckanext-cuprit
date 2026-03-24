@@ -302,7 +302,11 @@ section.tags .tag-list {
 
 
 .site-footer {
-  background: none!important;
+  /* background: none!important; */
+  background: linear-gradient(
+    -60deg,
+    rgba(168,142,92, 0.95),
+    rgba(5,70,165,0.8)) !important;
   padding: 0!important;
 }
 
