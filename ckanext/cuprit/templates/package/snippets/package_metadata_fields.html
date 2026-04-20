@@ -8,7 +8,7 @@
 <fieldset>
   <legend>Responsibilities</legend>
   <div class="no-margin-bottom">
-    {{ form.input('author', label=_('Author(s)'), id='field-author', placeholder=_('Firstname Lastname of author'), value=data.author, error=errors.author, classes=['control-medium']) }}
+    {{ form.input('author', label=_('Author(s)'), id='field-author', placeholder=_('Firstname Lastname of author'), value=data.author, error=errors.author, is_required=True, classes=['control-medium']) }}
   </div>
   <input id="a_holder" value="{{data.author}}" class="hidden" style="height: 1px">
   <div id="author_widget">
@@ -232,15 +232,15 @@
 
     {% block package_metadata_fields_maintainer %}
 
-    {{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Firstname Lastname of person that maintains this dataset'), value=data.maintainer, error=errors.maintainer, classes=['control-medium']) }}
+    {{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Firstname Lastname of person that maintains this dataset'), value=data.maintainer, error=errors.maintainer, is_required=True, classes=['control-medium']) }}
 
-      {{ form.input('maintainer_email', label=_('Maintainer Email'), id='field-maintainer-email', placeholder=_('max.mustermannk@dainst.de (currently only one E-mail address supported!)'), value=data.maintainer_email, error=errors.maintainer_email, classes=['control-medium']) }}
+      {{ form.input('maintainer_email', label=_('Maintainer Email'), id='field-maintainer-email', placeholder=_('max.mustermannk@dainst.de (currently only one E-mail address supported!)'), value=data.maintainer_email, error=errors.maintainer_email, is_required=True, classes=['control-medium']) }}
       <span class="ds_notes" style="transform: translateY(-30px);">This E-Mail will be used to contact the person who is responsible for the dataset.</span>
 
     {% endblock %}
 
     {% block custom_fields %}
-    {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Deutsches Archäologisches Institut'), value=(data.publisher if data.publisher else _('Deutsches Archäologisches Institut')), error=errors.publisher, classes=['control-medium']) }}
+    {{ form.input('publisher', label=_('Publisher'), id='field-publisher', placeholder=_('Deutsches Archäologisches Institut'), value=(data.publisher if data.publisher else _('Deutsches Archäologisches Institut')), error=errors.publisher, is_required=True, classes=['control-medium']) }}
     {{ form.checkbox('agree', label=_('I have read and agree to the <a href="/help" target="blank">terms of service</a>.'), id='agree', value='1' if data.agree else '0', error=errors.agree, is_required=true) }}
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
