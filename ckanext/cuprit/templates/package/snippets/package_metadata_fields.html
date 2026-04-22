@@ -43,8 +43,11 @@
       this.authors = data.split(';').filter(item => item).map(author => {
         const parts = author.split(/[\[\]()]/).filter(part => part.trim());
         let name = parts[0].trim();
-        let orcid = parts[1]?.trim() || '';
-        let rorid = parts[2]?.trim() || '';
+        let orcid = author.indexOf('(') > -1 ? parts[1].trim() : '';
+        let rorid = '';
+        if (author.indexOf('[') > -1) {
+          rorid = (orcid !== '') ? parts[2].trim() : parts[1].trim();
+        }
         return { name, orcid, rorid, tempOrcid: orcid, tempRorid: rorid };
       });
     },
@@ -62,6 +65,7 @@
           this.authors[index][field] = '';
           this.authors[index]['temp' + field.charAt(0).toUpperCase() + field.slice(1)] = '';
         } else {
+          // TODO:: ADD VALIDATION FOR NAME - DO NOT ALLOW CHARS USED IN CONTRIBUTORS STRING: ()[]{};
           let isValid = (field === 'orcid') ? this.validateOrcid(value) : this.validateRorid(value);
           if (isValid) {
             this.authors[index][field] = value;
@@ -165,10 +169,23 @@
         this.contributors = data.split(';').filter(item => item).map(contributor => {
           const parts = contributor.split(/[\[\]{}()]/).filter(part => part.trim());
           let name = parts[0].trim();
-          let orcid = parts[1]?.trim() || '';
-          let rorid = parts[2]?.trim() || '';
-          let type = parts[3]?.trim() || 'Researcher'; // Default to Researcher if not specified
-
+          let orcid = contributor.indexOf('(') > -1 ? parts[1].trim() : '';
+          let rorid = '';
+          let type = 'Researcher'; // Default to Researcher if not specified
+          if (contributor.indexOf('[') > -1) {
+            rorid = (orcid !== '') ? parts[2].trim() : parts[1].trim();
+          }
+          if (contributor.indexOf('{') > -1) {
+            if (orcid !== '' || rorid !== '') {
+              if (orcid != '' && rorid != '') {
+                type = parts[3].trim();
+              } else {
+                type = parts[2].trim();
+              }
+            } else {
+                type = parts[1].trim();
+            }
+          }
           return { name, orcid, rorid, tempOrcid: orcid, tempRorid: rorid, tempType: type };
         });
       },
@@ -186,6 +203,7 @@
             this.contributors[index]['temp' + field.charAt(0).toUpperCase() + field.slice(1)] = '';
           } else {
             let isValid = true;
+            // TODO:: ADD VALIDATION FOR NAME - DO NOT ALLOW CHARS USED IN CONTRIBUTORS STRING: ()[]{};
             if (field === 'orcid') {
               isValid = this.validateOrcid(value);
             } else if (field === 'rorid') {
