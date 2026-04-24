@@ -51,39 +51,59 @@ def format_orcid(authors: str) -> str:
     Link author to ORCIDs and RORIDs if IDs are found, combining them within parentheses.
     Additionally, extracts and formats plain text inside curly braces.
     """
-    authors = authors.split(";")
+    authors_list = authors_to_list(authors)
     author_html_str = ""
-    for author in authors:
-        author_orcid = re.search('(\d{4}-\d{4}-\d{4}-\d{3}[\dX])', author)
-        author_rorid = re.search('\[(.*?)\]', author)
-        author_type = re.search('\{(.*?)\}', author)  # Search for text within curly braces
-        
-        # Clean author name from identifiers
-        clean_author = re.sub('\s?\(.*?\)', '', author).strip()
-        clean_author = re.sub('\s?\[.*?\]', '', clean_author).strip()
-        clean_author = re.sub('\s?\{.*?\}', '', clean_author).strip()
-        
+    for author in authors_list:
+        author_name = author.get('name', '')
+        author_type = author.get('type', None)
+        author_orcid = author.get('orcid', None)
+        author_rorid = author.get('rorid', None)
         links = []
         if author_type:
-            links.append(f'<span class="tag opacity-75">{author_type.group(1)}</span>')
+            links.append(f'<span class="tag opacity-75">{author_type}</span>')
         if author_orcid:
-            links.append(f'<a href="https://orcid.org/{author_orcid.group()}" class="tag opacity-75" target="_blank">ORCID ID: {author_orcid.group()}</a>')
+            links.append(f'<a href="https://orcid.org/{author_orcid}" class="tag opacity-75" target="_blank">ORCID ID: {author_orcid}</a>')
         if author_rorid:
-            links.append(f'<a href="https://ror.org/{author_rorid.group(1)}" class="tag opacity-75" target="_blank">ROR ID: {author_rorid.group(1)}</a>')
-
+            links.append(f'<a href="https://ror.org/{author_rorid}" class="tag opacity-75" target="_blank">ROR ID: {author_rorid}</a>')
 
         # Combine ORCID, RORID, and type with a space if all or some exist
         combined_links = ' '.join(links)
         
         # Append combined links to the author name if not empty
         if combined_links:
-            author_with_links = f'{clean_author} {combined_links}'
+            author_with_links = f'{author_name} {combined_links}'
         else:
-            author_with_links = clean_author
+            author_with_links = author_name
 
         author_html_str += f'{author_with_links}<br>'
     
     return author_html_str
+
+def authors_to_list(authors: str) -> list:
+    """
+    Return a list of authors or contributors as dicts.
+    """
+    authors = authors.split(";")
+    authors_dicts = []
+    for author in authors:
+        author_dict = {}
+        author_orcid = re.search('(\d{4}-\d{4}-\d{4}-\d{3}[\dX])', author)
+        author_rorid = re.search('\[(.*?)\]', author)
+        author_type = re.search('\{(.*?)\}', author) # Search for text within curly brackets
+
+        author_dict['orcid'] = author_orcid.group() if author_orcid else None
+        author_dict['rorid'] = author_rorid.group(1) if author_rorid else None
+        author_dict['type'] = author_type.group(1) if author_type else None
+
+        # Clean author name from identifiers
+        clean_author = author.replace('(' + author_dict['orcid'] + ')', '').strip() if author_orcid else author
+        clean_author = clean_author.replace('[' + author_dict['rorid'] + ']', '').strip() if author_rorid else clean_author
+        clean_author = clean_author.replace('{' + author_dict['type'] + '}', '').strip() if author_type else clean_author
+        author_dict['name'] = clean_author
+
+        authors_dicts.append(author_dict)
+
+    return authors_dicts
 
 def format_resources(resources: str) -> str:
     resources = str(resources)

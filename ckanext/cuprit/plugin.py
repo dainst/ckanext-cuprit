@@ -179,6 +179,7 @@ class CupritPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm, DefaultT
             'format_orcid': helpers.format_orcid,
             'format_resources': helpers.format_resources,
             'is_organization_admin': helpers.is_organization_admin,
+            'authors_to_list': helpers.authors_to_list,
         }
 
     # Custom pages
