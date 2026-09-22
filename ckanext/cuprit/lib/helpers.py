@@ -97,7 +97,11 @@ def authors_to_list(authors: str) -> list:
 
         # Clean author name from identifiers
         clean_author = author.replace('(' + author_dict['orcid'] + ')', '').strip() if author_orcid else author
+        # TODO:: decide if we're keeping the records that include the whole orcid url
+        clean_author = clean_author.replace('(https://orcid.org/' + author_dict['orcid'] + ')', '').strip() if author_orcid else clean_author
         clean_author = clean_author.replace('[' + author_dict['rorid'] + ']', '').strip() if author_rorid else clean_author
+        # TODO:: decide if we're keeping the records that include the whole ror url
+        clean_author = clean_author.replace('[https://ror.org/' + author_dict['rorid'] + ']', '').strip() if author_rorid else clean_author
         clean_author = clean_author.replace('{' + author_dict['type'] + '}', '').strip() if author_type else clean_author
         author_dict['name'] = clean_author
 
