@@ -10,7 +10,9 @@
         <div class="citation">
             <div id="citation-string" class="citation-string">
                 {% block default_citation_string %}
-                {{ h.authors_to_list(pkg_dict['author']) | map(attribute='name') | join(', ') }} ({{ h.package_get_year(pkg_dict) }}). <i>{{ pkg_dict['title'] }}</i> [Data set]. {{ pkg_dict['doi_publisher'] }}.
+                {{ pkg_dict['author'] }} ({{ h.package_get_year(pkg_dict) }}). <i>{{ pkg_dict['title'] }}</i> [Data set]. {{ pkg_dict['doi_publisher'] }}.
+                <!-- TEMPORARILY REVERSED CHANGE - WILL RESTORE IF WE DECIDE TO REMOVE ORCIDS AND RORIDS FROM THE CITATION -->
+                <!-- {{ h.authors_to_list(pkg_dict['author']) | map(attribute='name') | join(', ') }} ({{ h.package_get_year(pkg_dict) }}). <i>{{ pkg_dict['title'] }}</i> [Data set]. {{ pkg_dict['doi_publisher'] }}. -->
                 {% block citation_link %}
                 {% set doi_link = 'https://doi.org/' + pkg_dict['doi'] %}
                 <a href="{{ doi_link }}" target="_blank">
