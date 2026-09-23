@@ -109,6 +109,11 @@ def authors_to_list(authors: str) -> list:
 
     return authors_dicts
 
+def capitalize_cc_ids(license_id: str):
+    if license_id.startswith('cc'):
+        return license_id.upper()
+    return license_id
+
 def format_resources(resources: str) -> str:
     resources = str(resources)
     resources = resources.replace('"','')

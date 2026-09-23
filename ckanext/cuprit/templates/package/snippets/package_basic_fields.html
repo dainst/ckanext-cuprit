@@ -248,7 +248,7 @@
         {% set empty_license = _('Please select the license') %}
         <option value="">{{ empty_license }}</option>
         {% for license_id, license_desc in h.license_options(existing_license_id) %}
-          <option value="{{ license_id }}" {% if existing_license_id == license_id %}selected="selected"{% endif %}>{{ license_desc + ' (' + license_id + ')' }}</option>
+          <option value="{{ license_id }}" {% if existing_license_id == license_id %}selected="selected"{% endif %}>{{ license_desc + ' (' + h.capitalize_cc_ids(license_id) + ')' }}</option>
         {% endfor %}
       </select>
       {% if error %}<span class="error-block">{{ error if error is string else error | join(', ') }}</span>{% endif %}

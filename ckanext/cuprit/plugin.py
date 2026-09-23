@@ -180,6 +180,7 @@ class CupritPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm, DefaultT
             'format_resources': helpers.format_resources,
             'is_organization_admin': helpers.is_organization_admin,
             'authors_to_list': helpers.authors_to_list,
+            'capitalize_cc_ids': helpers.capitalize_cc_ids,
         }
 
     # Custom pages
